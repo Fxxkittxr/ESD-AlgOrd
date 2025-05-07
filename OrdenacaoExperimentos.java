@@ -1,6 +1,8 @@
 // Implementação dos algoritmos de ordenação e experimento comparativo
 
 import java.util.*;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class OrdenacaoExperimentos {
 
@@ -173,6 +175,8 @@ switch (algoritmo) {
 }
 
                         tempos[i] = medirTempo(sortFunc);
+                        salvarTempos(algoritmo, dist, tam, tempos);
+
                     }
 
                     double media = Arrays.stream(tempos).average().orElse(0.0) / 1_000_000.0;
@@ -183,4 +187,17 @@ switch (algoritmo) {
             }
         }
     }
+    public static void salvarTempos(String algoritmo, String dist, int tam, long[] tempos) {
+        String nomeArquivo = algoritmo + "_" + dist + "_" + tam + ".csv";
+        try (FileWriter writer = new FileWriter(nomeArquivo)) {
+            writer.write("execucao,tempo_ns\n");
+            for (int i = 0; i < tempos.length; i++) {
+                writer.write((i + 1) + "," + tempos[i] + "\n");
+            }
+        } catch (IOException e) {
+            System.err.println("Erro ao salvar arquivo: " + nomeArquivo);
+        }
+    }
+    
 }
+
